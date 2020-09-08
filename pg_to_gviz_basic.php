@@ -1426,6 +1426,9 @@ function pg_to_gviz_basic(
 			}
 			if ($debug) echo "created empty json array with $category_num_records data rows + $series_table_extra_field_count extra rows<br>";
 			if ($debug) echo "created empty json array with 1 category column + $series_num_records series columns + $category_table_extra_field_count extra columns<br>";
+                        //ADDED BY KKC TO SUPPORT CSV OUTPUT 2017-2-3
+			$table_column_count = 1 + $series_num_records + $category_table_extra_field_count;
+			if ($debug) echo "****Table Column Count variable set for $table_column_count Columns*****<br>"; //CHECK ADDED BY KKC
 			// now put the data into the data table, using the hash tables
 			$data_row_count = 0;
 			pg_result_seek($data_pg_results, 0);
@@ -1485,6 +1488,9 @@ function pg_to_gviz_basic(
 				
 			}
 			if ($debug) echo "loaded gviz json array with $data_row_count records of data<br>";
+			$table_row_count = $data_row_count; // ADDED BY KKC TO SUPPORT CSV OUTPUT 2017-2-3
+                        // This row count DOES NOT include the header, but it should not, as it gets added to the count later  ~KKC
+			if ($debug) echo "****Table Row Count variable set for $table_row_count Rows*****<br>"; //DEBUG CHECK BY KKC
 			break;
 		case 'deleteandinsertquery':
 			//remove the existing record
@@ -1586,7 +1592,7 @@ function pg_to_gviz_basic(
 			}
 			// DONE! the gviz output column types have been defined
 			$table_column_count = $series_counter - 1; // note this is different! because there is no category column in this case
-			if ($debug) echo "created gviz json array for $series_counter fields<br>";
+			if ($debug) echo "created gviz json array for $series_counter fields,****** $table_column_count COLUMNS*****<br>";
 			// load the gviz json array with data
 			$data_row_count = 0;
 			while ($data_row = pg_fetch_object($data_pg_results)) {
