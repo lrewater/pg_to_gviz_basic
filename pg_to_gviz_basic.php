@@ -1387,7 +1387,7 @@ function pg_to_gviz_basic(
 				 * now populate the upper right quadrant (extra columns for extra fields in the category table)
 				 */
 				for ($i=0;$i<$category_table_extra_field_count;++$i) {
-					$val = $category_row->$category_table_extra_fields[$i];
+					$val = $category_row->{$category_table_extra_fields[$i]};
 					$datatable["rows"][$category_row_count]["c"][$i+$series_num_records+1]["v"] = pgtypeval_to_gvval($category_table_extra_field_types[$i],$val);
 				}
 				++$category_row_count;
