@@ -375,19 +375,6 @@ function pg_to_gviz_basic(
 		case 'generic':
 			// make them all maps from original pg field type to gv column types
 			$output_fieldtypes = str_repeat('o',$max_num_fields);
-		case 'deleteandinsertquery':
-			/* a new output type that is actually an input type for a query filter table - single row with a single value
-			 * run a delete query to delete the existing record and then insert a new record with a new value
-			 * returns a table containing the query result (not actual data)
-			 * easy peasy, but have to "allocate" some of the args for other purposes:
-			 *   $output_type = 'deleteandinsertquery'
-			 *   $data_table_name is the name of the table to be modified
-			 *   use $drupal_user_id_field and $drupal_user_id args to hold the field name and value for the new record
-			*/
-			$data_table_name = getargs ("data_table_name",$data_table_name);
-			$drupal_user_id_field = getargs ("drupal_user_id_field",$drupal_user_id_field);
-			$drupal_user_id = getargs ("drupal_user_id",$drupal_user_id);
-			break;
 		default:
 			$data_table_name = getargs ("data_table_name",$data_table_name);
 			$series_fields = getargs ("series_fields",$series_fields);
@@ -806,7 +793,24 @@ function pg_to_gviz_basic(
 				if ($debug) echo "loaded gviz json array with $data_row_count records of data<br>";
 			}
 			break;
-		case 'category2':
+			case 'deleteandinsertquery':
+/* NOTE KKC moved this case statement to the very bottom of the case 'generic' statement on 7/2/2021
+   IT was sitting kind of in the middle of that statement, near the top, and breaking it so that the 'generic' output type
+   no longer worked.
+*/
+				/* a new output type that is actually an input type for a query filter table - single row with a single value
+				 * run a delete query to delete the existing record and then insert a new record with a new value
+				 * returns a table containing the query result (not actual data)
+				 * easy peasy, but have to "allocate" some of the args for other purposes:
+				 *   $output_type = 'deleteandinsertquery'
+				 *   $data_table_name is the name of the table to be modified
+				 *   use $drupal_user_id_field and $drupal_user_id args to hold the field name and value for the new record
+				*/
+				$data_table_name = getargs ("data_table_name",$data_table_name);
+				$drupal_user_id_field = getargs ("drupal_user_id_field",$drupal_user_id_field);
+				$drupal_user_id = getargs ("drupal_user_id",$drupal_user_id);
+				break;
+			case 'category2':
 			/*
 			* remember, this is constructing a crosstab from a n-tuple type data source
 			* a 2-tuple in this case
